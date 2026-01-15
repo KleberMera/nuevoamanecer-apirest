@@ -6,7 +6,7 @@ import { Prisma } from 'src/generated/prisma/client';
 export class RolController {
   constructor(private readonly rolService: RolService) {}
 
-  @Post() async createRol(@Body() data: Prisma.RolCreateInput) {
+  @Post('') async createRol(@Body() data: Prisma.RolCreateInput) {
     return this.rolService.createRol(data);
   }
 
