@@ -5,6 +5,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma, Rol } from 'src/generated/prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
+import { apiResponse } from 'src/shared/models/apiResponse';
 
 @Injectable()
 export class RolService {
@@ -13,7 +14,7 @@ export class RolService {
   //Crear Rol
   async createRol(
     data: Prisma.RolCreateInput,
-  ): Promise<{ data: Rol; message: string; status: number }> {
+  ): Promise<apiResponse<Rol>> {
     try {
       // Verificar si el rol ya existe
       const rolExistente = await this.prisma.rol.findUnique({

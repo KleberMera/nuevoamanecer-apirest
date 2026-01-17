@@ -24,6 +24,7 @@ model Usuario {
   email     String   @unique
   password  String
   rolId     Int
+  estado    String?  @default("A")
   rol       Rol      @relation(fields: [rolId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -33,7 +34,9 @@ model Rol {
   id          Int       @id @default(autoincrement())
   nombre      String    @unique
   descripcion String?
+  estado      String?   @default("A")
   usuarios    Usuario[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+

@@ -1,10 +1,15 @@
 -- CreateTable
 CREATE TABLE "Usuario" (
     "id" SERIAL NOT NULL,
-    "nombre" TEXT NOT NULL,
+    "nombre1" TEXT NOT NULL,
+    "nombre2" TEXT,
+    "apellido1" TEXT NOT NULL,
+    "apellido2" TEXT,
+    "telefono" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "rolId" INTEGER NOT NULL,
+    "estado" TEXT DEFAULT 'A',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -12,21 +17,22 @@ CREATE TABLE "Usuario" (
 );
 
 -- CreateTable
-CREATE TABLE "Roles" (
+CREATE TABLE "Rol" (
     "id" SERIAL NOT NULL,
     "nombre" TEXT NOT NULL,
     "descripcion" TEXT,
+    "estado" TEXT DEFAULT 'A',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Roles_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Rol_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Usuario_email_key" ON "Usuario"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Roles_nombre_key" ON "Roles"("nombre");
+CREATE UNIQUE INDEX "Rol_nombre_key" ON "Rol"("nombre");
 
 -- AddForeignKey
-ALTER TABLE "Usuario" ADD CONSTRAINT "Usuario_rolId_fkey" FOREIGN KEY ("rolId") REFERENCES "Roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Usuario" ADD CONSTRAINT "Usuario_rolId_fkey" FOREIGN KEY ("rolId") REFERENCES "Rol"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
