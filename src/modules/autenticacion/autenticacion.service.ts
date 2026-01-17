@@ -25,6 +25,10 @@ export class AutenticacionService {
       throw new UnauthorizedException('Nombre de usuario o contraseña incorrectos');
     }
 
+    if (usuario.estado !== 'A') {
+      throw new UnauthorizedException('El usuario está inactivo');
+    }
+
     const passwordValida = await this.bcryptService.comparePassword(password, usuario.password);
 
     if (!passwordValida) {
