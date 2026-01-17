@@ -29,7 +29,10 @@ export class UsuarioService {
     throw new Error('El email ya está en uso');
   }
 
-  private async validarNombreUsuario(nombreUsuario: string, idUsuario?: number) {
+  private async validarNombreUsuario(
+    nombreUsuario: string,
+    idUsuario?: number,
+  ) {
     const usuario = await this.prisma.usuario.findUnique({
       where: { nombreUsuario },
       select: { nombreUsuario: true, id: true },
@@ -49,7 +52,7 @@ export class UsuarioService {
     if (cedula.length < 8) {
       throw new Error('La cédula debe tener al menos 8 dígitos');
     }
-    
+
     const usuario = await this.prisma.usuario.findUnique({
       where: { cedula },
       select: { cedula: true, id: true },
@@ -65,7 +68,7 @@ export class UsuarioService {
       if (data.email) {
         await this.validarEmail(data.email);
       }
-      await this.validarNombreUsuario(data.nombreUsuario);
+      await this.validarNombreUsuario(data.nombreUsuario as string);
       if (data.cedula) {
         await this.validarCedula(data.cedula as string);
       }
@@ -150,9 +153,11 @@ export class UsuarioService {
           password: data.password
             ? await this.bcryptService.hashPassword(data.password as string)
             : undefined,
-          email: data.email === null ? undefined : data.email,
+          email: data.email === null ? undefined : (data.email as string),
           nombreUsuario:
-            data.nombreUsuario === null ? undefined : data.nombreUsuario,
+            data.nombreUsuario === null
+              ? undefined
+              : (data.nombreUsuario as string),
           cedula: data.cedula === null ? undefined : (data.cedula as string),
         },
       });
@@ -163,9 +168,7 @@ export class UsuarioService {
         status: 200,
       };
     } catch (error) {
-      throw new BadRequestException(
-        `Error al actualizar el usuario: ${error}`,
-      );
+      throw new BadRequestException(`Error al actualizar el usuario: ${error}`);
     }
   }
 }

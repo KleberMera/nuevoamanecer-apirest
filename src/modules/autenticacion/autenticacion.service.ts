@@ -35,7 +35,7 @@ export class AutenticacionService {
       throw new UnauthorizedException('Nombre de usuario o contraseña incorrectos');
     }
 
-    const payload = { sub: usuario.id, nombreUsuario: usuario.nombreUsuario };
+    const payload = { sub: usuario.id, nombreUsuario: usuario.nombreUsuario as string };
     const access_token = await this.jwtService.signAsync(payload);
 
     const usuarioSinPassword = { ...usuario } as Partial<typeof usuario>;

@@ -13,7 +13,7 @@ CREATE TABLE "Usuario" (
     "rolId" INTEGER NOT NULL,
     "estado" TEXT DEFAULT 'A',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3),
 
     CONSTRAINT "Usuario_pkey" PRIMARY KEY ("id")
 );
@@ -25,7 +25,7 @@ CREATE TABLE "Rol" (
     "descripcion" TEXT,
     "estado" TEXT DEFAULT 'A',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3),
 
     CONSTRAINT "Rol_pkey" PRIMARY KEY ("id")
 );
