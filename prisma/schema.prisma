@@ -20,9 +20,10 @@ model Usuario {
   nombre2   String?
   apellido1 String
   apellido2 String?
-  telefono  String
+  telefono  String  @db.VarChar(10)
   nombreUsuario  String   @unique
   email     String?   @unique
+  cedula    String   @unique @db.VarChar(10)
   password  String
   rolId     Int
   estado    String?  @default("A")

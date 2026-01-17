@@ -39,6 +39,26 @@ export class UsuarioService {
     throw new Error('El nombre de usuario ya está en uso');
   }
 
+  private async validarCedula(cedula: string, idUsuario?: number) {
+    if (!cedula || cedula.trim() === '') {
+      throw new Error('La cédula no puede estar vacía');
+    }
+    if (!/^\d+$/.test(cedula)) {
+      throw new Error('La cédula debe contener solo números');
+    }
+    if (cedula.length < 8) {
+      throw new Error('La cédula debe tener al menos 8 dígitos');
+    }
+    
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { cedula },
+      select: { cedula: true, id: true },
+    });
+    if (!usuario) return;
+    if (idUsuario && usuario.id === idUsuario) return;
+    throw new Error('La cédula ya está en uso');
+  }
+
   //crear usuario
   async createUsuario(data: UsuarioCreateInput): Promise<apiResponse<Usuario>> {
     try {
@@ -46,6 +66,9 @@ export class UsuarioService {
         await this.validarEmail(data.email);
       }
       await this.validarNombreUsuario(data.nombreUsuario);
+      if (data.cedula) {
+        await this.validarCedula(data.cedula as string);
+      }
       const nuevoUsuario = await this.prisma.usuario.create({
         data: {
           ...data,
@@ -116,6 +139,9 @@ export class UsuarioService {
       if (data.nombreUsuario) {
         await this.validarNombreUsuario(data.nombreUsuario as string, id);
       }
+      if (data.cedula) {
+        await this.validarCedula(data.cedula as string, id);
+      }
 
       const usuarioActualizado = await this.prisma.usuario.update({
         where: { id },
@@ -127,6 +153,7 @@ export class UsuarioService {
           email: data.email === null ? undefined : data.email,
           nombreUsuario:
             data.nombreUsuario === null ? undefined : data.nombreUsuario,
+          cedula: data.cedula === null ? undefined : (data.cedula as string),
         },
       });
 

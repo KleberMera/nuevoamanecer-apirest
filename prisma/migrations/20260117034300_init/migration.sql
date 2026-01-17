@@ -5,9 +5,10 @@ CREATE TABLE "Usuario" (
     "nombre2" TEXT,
     "apellido1" TEXT NOT NULL,
     "apellido2" TEXT,
-    "telefono" TEXT NOT NULL,
+    "telefono" VARCHAR(10) NOT NULL,
     "nombreUsuario" TEXT NOT NULL,
     "email" TEXT,
+    "cedula" VARCHAR(10) NOT NULL,
     "password" TEXT NOT NULL,
     "rolId" INTEGER NOT NULL,
     "estado" TEXT DEFAULT 'A',
@@ -34,6 +35,9 @@ CREATE UNIQUE INDEX "Usuario_nombreUsuario_key" ON "Usuario"("nombreUsuario");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Usuario_email_key" ON "Usuario"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Usuario_cedula_key" ON "Usuario"("cedula");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Rol_nombre_key" ON "Rol"("nombre");
