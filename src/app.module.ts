@@ -7,7 +7,9 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
 import { AutenticacionModule } from './modules/autenticacion/autenticacion.module';
 
 @Module({
-  imports: [RolModule, UsuarioModule, AutenticacionModule],
+  imports: [
+    
+    RolModule, UsuarioModule, AutenticacionModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
