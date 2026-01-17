@@ -21,7 +21,8 @@ model Usuario {
   apellido1 String
   apellido2 String?
   telefono  String
-  email     String   @unique
+  nombreUsuario  String   @unique
+  email     String?   @unique
   password  String
   rolId     Int
   estado    String?  @default("A")

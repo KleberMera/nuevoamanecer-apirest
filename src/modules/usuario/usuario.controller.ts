@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import type { UsuarioCreateInput } from 'src/generated/prisma/models';
 @Controller('usuario')
@@ -8,5 +8,10 @@ export class UsuarioController {
   @Post()
   async create(@Body() data: UsuarioCreateInput) {
     return await this.usuarioService.createUsuario(data);
+  }
+
+  @Get(':id')
+  async findOne(@Body('id') id: number) {
+    return await this.usuarioService.listarUsuario(id);
   }
 }

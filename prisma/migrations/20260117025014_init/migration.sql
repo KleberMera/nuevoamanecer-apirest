@@ -6,7 +6,8 @@ CREATE TABLE "Usuario" (
     "apellido1" TEXT NOT NULL,
     "apellido2" TEXT,
     "telefono" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
+    "nombreUsuario" TEXT NOT NULL,
+    "email" TEXT,
     "password" TEXT NOT NULL,
     "rolId" INTEGER NOT NULL,
     "estado" TEXT DEFAULT 'A',
@@ -27,6 +28,9 @@ CREATE TABLE "Rol" (
 
     CONSTRAINT "Rol_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Usuario_nombreUsuario_key" ON "Usuario"("nombreUsuario");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Usuario_email_key" ON "Usuario"("email");
