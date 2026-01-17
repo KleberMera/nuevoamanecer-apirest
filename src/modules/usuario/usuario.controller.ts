@@ -1,6 +1,6 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Delete, Patch, Param } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
-import type { UsuarioCreateInput } from 'src/generated/prisma/models';
+import type { UsuarioCreateInput, UsuarioUncheckedUpdateInput } from 'src/generated/prisma/models';
 @Controller('usuario')
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
@@ -11,7 +11,22 @@ export class UsuarioController {
   }
 
   @Get(':id')
-  async findOne(@Body('id') id: number) {
-    return await this.usuarioService.listarUsuario(id);
+  async findOne(@Param('id') id: string) {
+    return await this.usuarioService.listarUsuario(Number(id));
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() data: UsuarioUncheckedUpdateInput) {
+    return await this.usuarioService.actualizarUsuario({ ...data, id: Number(id) });
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return await this.usuarioService.eliminarUsuario(Number(id));
+  }
+
+  @Get('estado/:estado')
+  async findByEstado(@Param('estado') estado: string) {
+    return await this.usuarioService.listarUsuariosPorEstado(estado);
   }
 }
