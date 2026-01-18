@@ -6,11 +6,12 @@ import { RolModule } from './modules/rol/rol.module';
 import { UsuarioModule } from './modules/usuario/usuario.module';
 import { AutenticacionModule } from './modules/autenticacion/autenticacion.module';
 import { ConfigModule } from '@nestjs/config';
+import { AccionModule } from './modules/accion/accion.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    RolModule, UsuarioModule, AutenticacionModule],
+    RolModule, UsuarioModule, AutenticacionModule, AccionModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

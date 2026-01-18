@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
+// Configurar zona horaria global para Ecuador
+process.env.TZ = process.env.TIMEZONE || 'America/Guayaquil';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
