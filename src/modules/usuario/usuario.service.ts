@@ -68,9 +68,9 @@ export class UsuarioService {
       if (data.email) {
         await this.validarEmail(data.email);
       }
-      await this.validarNombreUsuario(data.nombreUsuario as string);
+      await this.validarNombreUsuario(data.nombreUsuario);
       if (data.cedula) {
-        await this.validarCedula(data.cedula as string);
+        await this.validarCedula(data.cedula);
       }
       const nuevoUsuario = await this.prisma.usuario.create({
         data: {
@@ -157,7 +157,7 @@ export class UsuarioService {
           nombreUsuario:
             data.nombreUsuario === null
               ? undefined
-              : (data.nombreUsuario as string),
+              : (data.nombreUsuario as string), 
           cedula: data.cedula === null ? undefined : (data.cedula as string),
         },
       });
