@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BcryptService } from 'src/shared/config/bcrypt/bcrypt.service';
@@ -12,30 +16,60 @@ export class AutenticacionService {
     private jwtService: JwtService,
   ) {}
 
-  async login(nombreUsuario: string, password: string): Promise<apiResponse<Omit<any, 'password'>>> {
+  async login(
+    nombreUsuario: string,
+    password: string,
+  ): Promise<apiResponse<Omit<any, 'password'>>> {
     if (!nombreUsuario || !password) {
-      throw new BadRequestException('El nombre de usuario y la contraseña son requeridos');
+      throw new BadRequestException(
+        'El nombre de usuario y la contraseña son requeridos',
+      );
     }
 
     const usuario = await this.prisma.usuario.findUnique({
       where: { nombreUsuario },
+      select: {
+        id: true,
+        nombre1: true,
+        nombre2: true,
+        apellido1: true,
+        apellido2: true,
+        nombreUsuario: true,
+        estado: true,
+        password: true,
+        telefono: true,
+        cedula: true,
+        rol: {
+          select: {
+            id: true,
+            nombre: true,
+          },
+        },
+      },
     });
 
     if (!usuario) {
-      throw new UnauthorizedException('Nombre de usuario o contraseña incorrectos');
+      throw new UnauthorizedException(
+        'Nombre de usuario o contraseña incorrectos',
+      );
     }
 
     if (usuario.estado !== 'A') {
       throw new UnauthorizedException('El usuario está inactivo');
     }
 
-    const passwordValida = await this.bcryptService.comparePassword(password, usuario.password);
+    const passwordValida = await this.bcryptService.comparePassword(
+      password,
+      usuario.password,
+    );
 
     if (!passwordValida) {
-      throw new UnauthorizedException('Nombre de usuario o contraseña incorrectos');
+      throw new UnauthorizedException(
+        'Nombre de usuario o contraseña incorrectos',
+      );
     }
 
-    const payload = { sub: usuario.id, nombreUsuario: usuario.nombreUsuario as string };
+    const payload = { sub: usuario.id, nombreUsuario: usuario.nombreUsuario };
     const access_token = await this.jwtService.signAsync(payload);
 
     const usuarioSinPassword = { ...usuario } as Partial<typeof usuario>;
@@ -43,7 +77,7 @@ export class AutenticacionService {
 
     return {
       message: 'Login exitoso',
-      data: usuarioSinPassword as Omit<any, 'password'>,
+      data: usuarioSinPassword as Omit<typeof usuario, 'password'>,
       access_token,
       status: 200,
     };

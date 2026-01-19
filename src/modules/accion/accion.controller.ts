@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AccionService } from './accion.service';
 import { Prisma } from 'src/generated/prisma/client';
 
@@ -12,7 +12,12 @@ export class AccionController {
   }
 
   @Get('usuario/:usuarioId')
-  async listarAccionesPorUsuario(@Param('usuarioId') usuarioId: number) {
-    return this.accionService.listarAccionesPorUsuario(Number(usuarioId));
+  async listarAccionesPorUsuario(@Param('usuarioId') usuarioId: number, @Query('periodo') periodo?: string) {
+    return this.accionService.listarAccionesPorUsuario(Number(usuarioId), periodo);
+  }
+
+  @Get('periodo')
+  async listarAccionesPorPeriodo(@Query('periodo') periodo?: string) {
+    return this.accionService.listarAccionesPorPeriodo(periodo);
   }
 }
