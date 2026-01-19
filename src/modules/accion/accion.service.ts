@@ -24,4 +24,22 @@ export class AccionService {
       throw new BadRequestException(`Error al crear el Accion: ${error}`);
     }
   }
+
+  //Listar acciones por id de usuario
+  async listarAccionesPorUsuario(
+    usuarioId: number,
+  ): Promise<apiResponse<Accion[]>> {
+    try {
+      const acciones = await this.prisma.accion.findMany({
+        where: { usuarioId },
+      });
+      return {
+        status: 200,
+        message: 'Acciones obtenidas exitosamente',
+        data: acciones,
+      };
+    } catch (error) {
+      throw new BadRequestException(`Error al obtener las acciones: ${error}`);
+    }
+  }
 }
