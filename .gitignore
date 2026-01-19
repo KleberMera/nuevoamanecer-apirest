@@ -2,7 +2,7 @@
 /dist
 /node_modules
 /build
-
+/sqldatabase
 # Logs
 logs
 *.log
