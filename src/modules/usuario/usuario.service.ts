@@ -113,10 +113,26 @@ export class UsuarioService {
   //Listar Usuarios x Estado
   async listarUsuariosPorEstado(
     estado: string,
-  ): Promise<apiResponse<Usuario[]>> {
+  ): Promise<apiResponse<Partial<Usuario>[]>> {
     try {
       const usuarios = await this.prisma.usuario.findMany({
         where: { estado },
+        select: {
+          id: true,
+          nombre1: true,
+          nombre2: true,
+          apellido1: true,
+          apellido2: true,
+          nombreUsuario: true,
+          email: true,
+          estado: true,
+          rol: {
+            select: {
+              id: true,
+              nombre: true,
+            }
+          }
+        },
       });
       return {
         data: usuarios,
@@ -157,7 +173,7 @@ export class UsuarioService {
           nombreUsuario:
             data.nombreUsuario === null
               ? undefined
-              : (data.nombreUsuario as string), 
+              : (data.nombreUsuario as string),
           cedula: data.cedula === null ? undefined : (data.cedula as string),
         },
       });

@@ -28,10 +28,27 @@ export class AccionService {
   //Listar acciones por id de usuario
   async listarAccionesPorUsuario(
     usuarioId: number,
-  ): Promise<apiResponse<Accion[]>> {
+  ): Promise<apiResponse<Partial<Accion>[]>> {
     try {
       const acciones = await this.prisma.accion.findMany({
         where: { usuarioId },
+        select: {
+          id: true,
+          usuarioId: true,
+          numero: true,
+          valor: true,
+          acumulado: true,
+          estado: true,
+          fecha: true,
+          usuario: {
+            select: {
+              nombre1: true,
+              nombre2: true,
+              apellido1: true,
+              apellido2: true,
+            },
+          },
+        },
       });
       return {
         status: 200,
