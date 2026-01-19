@@ -2,6 +2,7 @@
 CREATE TABLE "Accion" (
     "id" SERIAL NOT NULL,
     "usuarioId" INTEGER NOT NULL,
+    "periodo" TEXT NOT NULL,
     "numero" INTEGER NOT NULL,
     "valor" INTEGER NOT NULL,
     "acumulado" INTEGER,
