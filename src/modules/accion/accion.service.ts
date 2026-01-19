@@ -95,4 +95,31 @@ export class AccionService {
       throw new BadRequestException(`Error al obtener las acciones: ${error}`);
     }
   }
+
+  //Total de acciones por usuario, opcional por periodo
+  //Ver el valor y el acumulado
+  async totalAccionesPorUsuario(
+    usuarioId: number,
+    periodo?: string,
+  ): Promise<apiResponse<{ totalNumero: number; totalValor: number }>> {
+    try {
+      const resultado = await this.prisma.accion.aggregate({
+        _sum: {
+          numero: true,
+          valor: true,
+        },
+        where: { usuarioId, ...(periodo && { periodo }) },
+      });
+      return {
+        status: 200,
+        message: 'Totales obtenidos exitosamente',
+        data: {
+          totalNumero: resultado._sum.numero || 0,
+          totalValor: resultado._sum.valor || 0,
+        },
+      };
+    } catch (error) {
+      throw new BadRequestException(`Error al obtener los totales: ${error}`);
+    }
+  }
 }

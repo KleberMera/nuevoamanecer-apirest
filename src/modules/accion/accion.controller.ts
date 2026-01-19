@@ -20,4 +20,9 @@ export class AccionController {
   async listarAccionesPorPeriodo(@Query('periodo') periodo?: string) {
     return this.accionService.listarAccionesPorPeriodo(periodo);
   }
+
+  @Get('total/:usuarioId')
+  async totalAccionesPorUsuario(@Param('usuarioId') usuarioId: number, @Query('periodo') periodo?: string) {
+    return this.accionService.totalAccionesPorUsuario(Number(usuarioId), periodo);
+  }
 }
