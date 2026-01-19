@@ -4,7 +4,7 @@ CREATE TABLE "Accion" (
     "usuarioId" INTEGER NOT NULL,
     "numero" INTEGER NOT NULL,
     "valor" INTEGER NOT NULL,
-    "acumulado" INTEGER NOT NULL,
+    "acumulado" INTEGER,
     "fecha" TIMESTAMP(3) NOT NULL,
     "estado" TEXT DEFAULT 'A',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
