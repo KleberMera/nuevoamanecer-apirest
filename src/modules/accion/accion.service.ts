@@ -76,6 +76,7 @@ export class AccionService {
           acumulado: true,
           estado: true,
           fecha: true,
+          periodo: true,
           usuario: {
             select: {
               nombre1: true,
