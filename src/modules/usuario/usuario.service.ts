@@ -118,7 +118,7 @@ export class UsuarioService {
       const usuarios = await this.prisma.usuario.findMany({
         where: { estado },
         select: {
-          id: true,
+           id: true,
           nombre1: true,
           nombre2: true,
           apellido1: true,
