@@ -11,7 +11,7 @@ export class RolController {
     return this.rolService.createRol(data);
   }
 
-  @Get('todo') async getAllRoles() {
+  @Get('') async getAllRoles() {
     return this.rolService.getAllRoles();
   }
 }

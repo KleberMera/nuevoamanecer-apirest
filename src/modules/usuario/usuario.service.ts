@@ -84,7 +84,7 @@ export class UsuarioService {
         status: 201,
       };
     } catch (error) {
-      throw new BadRequestException(`Error al crear el usuario: ${error}`);
+      throw new BadRequestException(`${error}`);
     }
   }
 
