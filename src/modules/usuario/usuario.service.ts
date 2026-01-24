@@ -124,6 +124,8 @@ export class UsuarioService {
           apellido1: true,
           apellido2: true,
           nombreUsuario: true,
+          cedula: true,
+          telefono: true, 
           email: true,
           estado: true,
           rol: {
