@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Accion } from 'src/generated/prisma/client';
-import { AccionCreateInput } from 'src/generated/prisma/models';
+import { AccionCreateInput, AccionUncheckedUpdateInput } from 'src/generated/prisma/models';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { apiResponse } from 'src/shared/models/apiResponse';
 
@@ -121,6 +121,29 @@ export class AccionService {
       };
     } catch (error) {
       throw new BadRequestException(`Error al obtener los totales: ${error}`);
+    }
+  }
+
+  //Actualizar accion por id de usuario
+  async actualizarAccion(
+    id: number,
+    data: Partial<AccionUncheckedUpdateInput>,
+  ): Promise<apiResponse<Accion>> {
+    try {
+      await this.prisma.accion.findUniqueOrThrow({
+        where: { id },
+      });
+      const updatedAccion = await this.prisma.accion.update({
+        where: { id },
+        data,
+      });
+      return {
+        status: 200,
+        message: 'Accion actualizada exitosamente',
+        data: updatedAccion,
+      };
+    } catch (error) {
+      throw new BadRequestException(`Error al actualizar la accion: ${error}`);
     }
   }
 }

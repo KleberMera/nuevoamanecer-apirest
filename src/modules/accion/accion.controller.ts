@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { AccionService } from './accion.service';
 import { Prisma } from 'src/generated/prisma/client';
 
@@ -25,4 +25,12 @@ export class AccionController {
   async totalAccionesPorUsuario(@Param('usuarioId') usuarioId: number, @Query('periodo') periodo?: string) {
     return this.accionService.totalAccionesPorUsuario(Number(usuarioId), periodo);
   }
+
+  //Actualizar Accion
+  @Patch(':id')
+  async actualizarAccion(@Param('id') id: number, @Body() data: Partial<Prisma.AccionUncheckedUpdateInput>) {
+    return this.accionService.actualizarAccion(Number(id), data);
+  }
+
+
 }
