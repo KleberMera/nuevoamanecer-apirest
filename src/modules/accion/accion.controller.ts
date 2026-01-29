@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { AccionService } from './accion.service';
 import { Prisma } from 'src/generated/prisma/client';
+import { Public } from 'src/shared/config/guards/token/token.guard';
 
 @Controller('accion')
 export class AccionController {
@@ -20,7 +21,8 @@ export class AccionController {
   async listarAccionesPorPeriodo(@Query('periodo') periodo?: string) {
     return this.accionService.listarAccionesPorPeriodo(periodo);
   }
-
+  
+  @Public()
   @Get('total/:usuarioId')
   async totalAccionesPorUsuario(@Param('usuarioId') usuarioId: number, @Query('periodo') periodo?: string) {
     return this.accionService.totalAccionesPorUsuario(Number(usuarioId), periodo);

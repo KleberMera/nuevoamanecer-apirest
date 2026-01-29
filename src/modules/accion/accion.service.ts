@@ -110,7 +110,7 @@ export class AccionService {
           numero: true,
           valor: true,
         },
-        where: { usuarioId, ...(periodo && { periodo }) },
+        where: { usuarioId, ...(periodo && { periodo }), estado: 'A' },
       });
       return {
         status: 200,
