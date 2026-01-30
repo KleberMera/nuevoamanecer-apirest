@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Prestamo, Prisma } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { apiResponse } from 'src/shared/models/apiResponse';
@@ -9,11 +9,31 @@ export class PrestamoService {
 
   //Funcion para crear un prestamo
   async createPrestamo(
-    data: Prisma.PrestamoCreateInput,
+    usuarioId: number,
+    data: Omit<Prisma.PrestamoCreateInput, 'usuario'>,
   ): Promise<apiResponse<Prestamo>> {
     try {
+      // Validar que el usuario no tenga prestamos activos
+      const prestamoExistente = await this.prisma.prestamo.findFirst({
+        where: {
+          usuarioId: usuarioId,
+          estado: 'A',
+        },
+      });
+
+      if (prestamoExistente) {
+        throw new BadRequestException(
+          'El usuario ya tiene un prestamo activo',
+        );
+      }
+
       const nuevoPrestamo = await this.prisma.prestamo.create({
-        data,
+        data: {
+          ...data,
+          usuario: {
+            connect: { id: usuarioId },
+          },
+        },
       });
       return {
         data: nuevoPrestamo,
@@ -21,6 +41,9 @@ export class PrestamoService {
         status: 201,
       };
     } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
       throw new Error(`Error al crear el prestamo: ${error}`);
     }
   }
