@@ -58,13 +58,29 @@ model Accion {
   updatedAt DateTime? @updatedAt
 }
 
+
+// model solicitudPrestamo {
+//   id         Int       @id @default(autoincrement())
+//   usuarioId  Int?
+//   periodo    String?
+//   monto      Int
+//   interes    Float
+//   cuotas     Int
+//   fecha      DateTime
+//   frecuencia String    @default("MENSUAL")
+//   estado     String?   @default("PENDIENTE")
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime? @updatedAt
+
+// }
+
 model Prestamo {
   id         Int               @id @default(autoincrement())
   usuarioId  Int
   usuario    Usuario           @relation(fields: [usuarioId], references: [id])
   numSolicitud Int?
   periodo   String?
-  monto      Int
+  monto      Float
   interes    Float
   cuotas     Int
   fecha      DateTime
@@ -81,6 +97,7 @@ model DetallePrestamo {
   prestamo   Prestamo  @relation(fields: [prestamoId], references: [id])
   fecha  DateTime?
   cuotaNum   Int
+  monto      Float
   interes    Float
   capital    Float
   saldo      Float
