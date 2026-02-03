@@ -97,7 +97,9 @@ export class PrestamoService {
         where: {
           usuarioId: usuarioId,
         },
+        
         include: {
+          
           detalles: true,
         },
       });
