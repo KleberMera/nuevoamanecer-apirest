@@ -15,11 +15,20 @@ export class PrestamoController {
     return this.prestamoService.createPrestamo(usuarioId, data);
   }
 
-  @Public()
+
   @Get('estado/:estado')
   async listarPrestamosPorEstado(
     @Param('estado') estado: string,
   ) {
     return this.prestamoService.listarPrestamosPorEstado(estado);
+  }
+
+  //Lsistar prestamos por usuario
+  @Public()
+  @Get('usuario/:usuarioId')
+  async listarPrestamosPorUsuario(
+    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+  ) {
+    return this.prestamoService.listarPrestamosPorUsuario(usuarioId);
   }
 }

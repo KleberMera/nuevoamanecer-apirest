@@ -47,14 +47,18 @@ export class PrestamoService {
   }
 
   //Listar usuarios con prestamos según estado
-  async listarPrestamosPorEstado(
-    estado: string,
-  ): Promise<apiResponse<any[]>> {
+  async listarPrestamosPorEstado(estado: string): Promise<apiResponse<any[]>> {
     try {
       const usuarios = await this.prisma.usuario.findMany({
-        omit: { password: true , createdAt: true, updatedAt: true, 
-        email: true, cedula: true,
-           telefono: true,  estado: true},
+        omit: {
+          password: true,
+          createdAt: true,
+          updatedAt: true,
+          email: true,
+          cedula: true,
+          telefono: true,
+          estado: true,
+        },
         where: {
           prestamos: {
             some: {
@@ -66,11 +70,10 @@ export class PrestamoService {
           prestamos: {
             omit: { createdAt: true, updatedAt: true },
             include: {
-              
               detalles: {
                 omit: { createdAt: true, updatedAt: true },
               },
-            }
+            },
           },
         },
       });
@@ -81,6 +84,30 @@ export class PrestamoService {
       };
     } catch (error) {
       throw new Error(`Error al obtener los usuarios con prestamos: ${error}`);
+    }
+  }
+
+  //Listar prestamos por usuario
+
+  async listarPrestamosPorUsuario(
+    usuarioId: number,
+  ): Promise<apiResponse<Prestamo[]>> {
+    try {
+      const prestamos = await this.prisma.prestamo.findMany({
+        where: {
+          usuarioId: usuarioId,
+        },
+        include: {
+          detalles: true,
+        },
+      });
+      return {
+        data: prestamos,
+        message: 'Prestamos del usuario obtenidos exitosamente',
+        status: 200,
+      };
+    } catch (error) {
+      throw new Error(`Error al obtener los prestamos del usuario: ${error}`);
     }
   }
 }
