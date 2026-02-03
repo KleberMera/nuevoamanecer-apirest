@@ -30,4 +30,27 @@ export class DettPrestamoService {
       throw new Error(`Error al crear el detalle de prestamo: ${error}`);
     }
   }
+
+  //Actualizar estado de un detalle de prestamo por id
+  async updateDettPrestamoStatus(
+    id: number,
+    nuevoEstado: string,
+  ): Promise<apiResponse<DetallePrestamo>> {
+    try {
+      const dettPrestamoActualizado = await this.prisma.detallePrestamo.update({
+        where: { id: id },
+        data: { estadoPago: nuevoEstado },
+      });
+
+      return {
+        data: dettPrestamoActualizado,
+        message: 'Cuota de prestamo registrada exitosamente',
+        status: 200,
+      };
+    } catch (error) {
+      throw new Error(
+        `Error al actualizar el estado del detalle de prestamo: ${error}`,
+      );
+    }
+  }
 }
