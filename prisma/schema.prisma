@@ -98,3 +98,23 @@ view VmDistribucionPeriodos {
   totalacciones         BigInt?
   utilidadporaccion     Float?
 }
+
+view VmNominaPagosDetalle {
+  periodo        String?
+  mes            String?
+  nombrecompleto String?
+  cuota          Float?
+  capital        Float?
+  interes        Float?
+  estadopago     String?
+  cuotapagar     String?
+}
+
+view VmNominaPagosCabecera {
+  periodo          String?
+  mes              String?
+  totalcuota       Float?
+  totalcapital     Float?
+  totalinteres     Float?
+  cantidadusuarios BigInt?
+}

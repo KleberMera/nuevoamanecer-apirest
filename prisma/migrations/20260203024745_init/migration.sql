@@ -132,7 +132,9 @@ FOR EACH ROW
 EXECUTE FUNCTION calcular_acumulado_accion();
 
 -- CreateView VM_DISTRIBUCION_PERIODOS
-CREATE OR REPLACE VIEW "VmDistribucionPeriodos" AS
+DROP VIEW IF EXISTS "VmDistribucionPeriodos" CASCADE;
+
+CREATE VIEW "VmDistribucionPeriodos" AS
 SELECT
     dp."periodoPago" AS periodo,
     CASE EXTRACT(MONTH FROM TO_DATE(dp."periodoPago" || '01', 'YYYYMMDD'))
@@ -174,3 +176,66 @@ WHERE dp."estadoPago" = 'PAGADO'
   AND dp."periodoPago" IS NOT NULL
 GROUP BY dp."periodoPago"
 ORDER BY periodo DESC;
+
+-- CreateView VmNominaPayosCabecera
+DROP VIEW IF EXISTS "VmNominaPagosCabecera" CASCADE;
+
+CREATE VIEW "VmNominaPagosCabecera" AS
+SELECT
+    dp."periodoPago" AS periodo,
+    CASE EXTRACT(MONTH FROM TO_DATE(dp."periodoPago" || '01', 'YYYYMMDD'))
+        WHEN 1 THEN 'ENERO'
+        WHEN 2 THEN 'FEBRERO'
+        WHEN 3 THEN 'MARZO'
+        WHEN 4 THEN 'ABRIL'
+        WHEN 5 THEN 'MAYO'
+        WHEN 6 THEN 'JUNIO'
+        WHEN 7 THEN 'JULIO'
+        WHEN 8 THEN 'AGOSTO'
+        WHEN 9 THEN 'SEPTIEMBRE'
+        WHEN 10 THEN 'OCTUBRE'
+        WHEN 11 THEN 'NOVIEMBRE'
+        WHEN 12 THEN 'DICIEMBRE'
+    END AS mes,
+    COALESCE(SUM(dp."monto"), 0) AS totalCuota,
+    COALESCE(SUM(dp."capital"), 0) AS totalCapital,
+    COALESCE(SUM(dp."interes"), 0) AS totalInteres,
+    COUNT(DISTINCT p."usuarioId") AS cantidadUsuarios
+
+FROM "DetallePrestamo" dp
+JOIN "Prestamo" p ON dp."prestamoId" = p.id
+WHERE dp."periodoPago" IS NOT NULL
+GROUP BY dp."periodoPago"
+ORDER BY periodo DESC;
+
+-- CreateView VmNominaPayosDetalle
+DROP VIEW IF EXISTS "VmNominaPagosDetalle" CASCADE;
+
+CREATE VIEW "VmNominaPagosDetalle" AS
+SELECT
+    dp."periodoPago" AS periodo,
+    CASE EXTRACT(MONTH FROM TO_DATE(dp."periodoPago" || '01', 'YYYYMMDD'))
+        WHEN 1 THEN 'ENERO'
+        WHEN 2 THEN 'FEBRERO'
+        WHEN 3 THEN 'MARZO'
+        WHEN 4 THEN 'ABRIL'
+        WHEN 5 THEN 'MAYO'
+        WHEN 6 THEN 'JUNIO'
+        WHEN 7 THEN 'JULIO'
+        WHEN 8 THEN 'AGOSTO'
+        WHEN 9 THEN 'SEPTIEMBRE'
+        WHEN 10 THEN 'OCTUBRE'
+        WHEN 11 THEN 'NOVIEMBRE'
+        WHEN 12 THEN 'DICIEMBRE'
+    END AS mes,
+    CONCAT(u."nombre1", ' ', COALESCE(u."nombre2", ''), ' ', u."apellido1", ' ', COALESCE(u."apellido2", '')) AS nombreCompleto,
+    dp."monto" AS cuota,
+    dp."capital" AS capital,
+    dp."interes" AS interes,
+    dp."estadoPago" AS estadoPago,
+    CONCAT(dp."cuotaNum"::VARCHAR, '/', p."cuotas"::VARCHAR) AS cuotaPagar
+FROM "DetallePrestamo" dp
+JOIN "Prestamo" p ON dp."prestamoId" = p.id
+JOIN "Usuario" u ON p."usuarioId" = u.id
+WHERE dp."periodoPago" IS NOT NULL
+ORDER BY dp."periodoPago" DESC, dp."cuotaNum" ASC;
