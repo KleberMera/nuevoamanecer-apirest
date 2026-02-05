@@ -1,13 +1,8 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider     = "prisma-client"
-  output       = "../src/generated/prisma"
-  moduleFormat = "cjs"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["views"]
+  moduleFormat    = "cjs"
 }
 
 datasource db {
@@ -27,11 +22,11 @@ model Usuario {
   password      String
   rolId         Int
   estado        String?    @default("A")
-  rol           Rol        @relation(fields: [rolId], references: [id])
-  acciones      Accion[]
-  prestamos     Prestamo[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime?  @updatedAt
+  acciones      Accion[]
+  prestamos     Prestamo[]
+  rol           Rol        @relation(fields: [rolId], references: [id])
 }
 
 model Rol {
@@ -39,15 +34,14 @@ model Rol {
   nombre      String    @unique
   descripcion String?
   estado      String?   @default("A")
-  usuarios    Usuario[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
+  usuarios    Usuario[]
 }
 
 model Accion {
   id        Int       @id @default(autoincrement())
   usuarioId Int
-  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
   periodo   String
   numero    Int
   valor     Int
@@ -56,54 +50,51 @@ model Accion {
   estado    String?   @default("A")
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
 }
 
-
-// model solicitudPrestamo {
-//   id         Int       @id @default(autoincrement())
-//   usuarioId  Int?
-//   periodo    String?
-//   monto      Int
-//   interes    Float
-//   cuotas     Int
-//   fecha      DateTime
-//   frecuencia String    @default("MENSUAL")
-//   estado     String?   @default("PENDIENTE")
-//   createdAt  DateTime  @default(now())
-//   updatedAt  DateTime? @updatedAt
-
-// }
-
 model Prestamo {
-  id         Int               @id @default(autoincrement())
-  usuarioId  Int
-  usuario    Usuario           @relation(fields: [usuarioId], references: [id])
+  id           Int               @id @default(autoincrement())
+  usuarioId    Int
   numSolicitud Int?
-  periodo   String?
-  monto      Float
-  interes    Float
-  cuotas     Int
-  fecha      DateTime
-  frecuencia String            @default("MENSUAL")
-  estado     String?           @default("A")
-  createdAt  DateTime          @default(now())
-  updatedAt  DateTime?         @updatedAt
-  detalles   DetallePrestamo[]
+  periodo      String?
+  monto        Float
+  interes      Float
+  cuotas       Int
+  fecha        DateTime
+  frecuencia   String            @default("MENSUAL")
+  estado       String?           @default("A")
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime?         @updatedAt
+  detalles     DetallePrestamo[]
+  usuario      Usuario           @relation(fields: [usuarioId], references: [id])
 }
 
 model DetallePrestamo {
-  id         Int       @id @default(autoincrement())
-  prestamoId Int
-  prestamo   Prestamo  @relation(fields: [prestamoId], references: [id])
-  fecha  DateTime?
-  cuotaNum   Int
-  monto      Float
-  interes    Float
-  capital    Float
-  saldo      Float
-  fechaPago  DateTime?
+  id          Int       @id @default(autoincrement())
+  prestamoId  Int
+  fecha       DateTime?
+  cuotaNum    Int
+  monto       Float
+  interes     Float
+  capital     Float
+  saldo       Float
+  fechaPago   DateTime?
   periodoPago String?
-  estadoPago String?   @default("PENDIENTE")
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime? @updatedAt
+  estadoPago  String?   @default("PENDIENTE")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  prestamo    Prestamo  @relation(fields: [prestamoId], references: [id])
+}
+
+view VmDistribucionPeriodos {
+  periodo               String
+  mes                   String
+  totalcobrado          Float?
+  totalinteres          Float?
+  totalcapital          Float?
+  interesporciento      Float?
+  interesmenosporciento Float?
+  totalacciones         BigInt?
+  utilidadporaccion     Float?
 }
