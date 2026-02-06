@@ -160,7 +160,7 @@ SELECT
     
     COALESCE(SUM(dp."interes") - (SUM(dp."interes") * 0.20), 0) AS interesMenosPorciento,
     
-    COALESCE(SUM(a."numero"), 0) AS totalAcciones,
+    COALESCE(SUM(a."numero"), 0)::INTEGER AS totalAcciones,
     
     CASE 
         WHEN COALESCE(SUM(a."numero"), 0) > 0
@@ -200,7 +200,7 @@ SELECT
     COALESCE(SUM(dp."monto"), 0) AS totalCuota,
     COALESCE(SUM(dp."capital"), 0) AS totalCapital,
     COALESCE(SUM(dp."interes"), 0) AS totalInteres,
-    COUNT(DISTINCT p."usuarioId") AS cantidadUsuarios
+    COUNT(DISTINCT p."usuarioId")::INTEGER AS cantidadUsuarios
 
 FROM "DetallePrestamo" dp
 JOIN "Prestamo" p ON dp."prestamoId" = p.id

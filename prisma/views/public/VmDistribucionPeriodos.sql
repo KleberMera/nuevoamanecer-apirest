@@ -36,7 +36,7 @@ SELECT
     ),
     (0) :: double precision
   ) AS interesmenosporciento,
-  COALESCE(sum(a.numero), (0) :: bigint) AS totalacciones,
+  (COALESCE(sum(a.numero), (0) :: bigint)) :: integer AS totalacciones,
   CASE
     WHEN (COALESCE(sum(a.numero), (0) :: bigint) > 0) THEN (
       (

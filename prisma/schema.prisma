@@ -95,7 +95,7 @@ view VmDistribucionPeriodos {
   totalcapital          Float?
   interesporciento      Float?
   interesmenosporciento Float?
-  totalacciones         BigInt?
+  totalacciones         Int?
   utilidadporaccion     Float?
 }
 
@@ -116,5 +116,5 @@ view VmNominaPagosCabecera {
   totalcuota       Float?
   totalcapital     Float?
   totalinteres     Float?
-  cantidadusuarios BigInt?
+  cantidadusuarios Int?
 }

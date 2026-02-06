@@ -1,3 +1,4 @@
+import { NominaModule } from './modules/nomina/nomina.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,7 +14,7 @@ import { DettPrestamoModule } from './modules/dett-prestamo/dett-prestamo.module
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    RolModule, UsuarioModule, AutenticacionModule, AccionModule, PrestamoModule, DettPrestamoModule],
+    RolModule, UsuarioModule, AutenticacionModule, AccionModule, PrestamoModule, DettPrestamoModule, NominaModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

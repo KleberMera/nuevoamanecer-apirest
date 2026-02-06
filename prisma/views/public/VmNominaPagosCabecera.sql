@@ -26,7 +26,7 @@ SELECT
   COALESCE(sum(dp.monto), (0) :: double precision) AS totalcuota,
   COALESCE(sum(dp.capital), (0) :: double precision) AS totalcapital,
   COALESCE(sum(dp.interes), (0) :: double precision) AS totalinteres,
-  count(DISTINCT p."usuarioId") AS cantidadusuarios
+  (count(DISTINCT p."usuarioId")) :: integer AS cantidadusuarios
 FROM
   (
     "DetallePrestamo" dp
