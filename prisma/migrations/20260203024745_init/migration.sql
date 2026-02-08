@@ -136,45 +136,55 @@ DROP VIEW IF EXISTS "VmDistribucionPeriodos" CASCADE;
 
 CREATE VIEW "VmDistribucionPeriodos" AS
 SELECT
-    dp."periodoPago" AS periodo,
-    CASE EXTRACT(MONTH FROM TO_DATE(dp."periodoPago" || '01', 'YYYYMMDD'))
-        WHEN 1 THEN 'ENERO'
-        WHEN 2 THEN 'FEBRERO'
-        WHEN 3 THEN 'MARZO'
-        WHEN 4 THEN 'ABRIL'
-        WHEN 5 THEN 'MAYO'
-        WHEN 6 THEN 'JUNIO'
-        WHEN 7 THEN 'JULIO'
-        WHEN 8 THEN 'AGOSTO'
-        WHEN 9 THEN 'SEPTIEMBRE'
-        WHEN 10 THEN 'OCTUBRE'
-        WHEN 11 THEN 'NOVIEMBRE'
-        WHEN 12 THEN 'DICIEMBRE'
-    END AS mes,
-    
-    COALESCE(SUM(dp."monto"), 0) AS totalCobrado,
-    COALESCE(SUM(dp."interes"), 0) AS totalInteres,
-    COALESCE(SUM(dp."capital"), 0) AS totalCapital,
-    
-    COALESCE(SUM(dp."interes") * 0.20, 0) AS interesPorciento,
-    
-    COALESCE(SUM(dp."interes") - (SUM(dp."interes") * 0.20), 0) AS interesMenosPorciento,
-    
-    COALESCE(SUM(a."numero"), 0)::INTEGER AS totalAcciones,
-    
+    periodo,
+    mes,
+    totalCobrado,
+    totalInteres,
+    totalCapital,
+    interesPorciento,
+    interesMenosPorciento,
+    totalAcciones,
+    totalAccionesAnterior,
     CASE 
-        WHEN COALESCE(SUM(a."numero"), 0) > 0
-        THEN (
-            COALESCE(SUM(dp."interes"), 0) - (COALESCE(SUM(dp."interes"), 0) * 0.20)
-        ) / COALESCE(SUM(a."numero"), 1)::FLOAT
+        WHEN totalAccionesAnterior > 0
+        THEN interesMenosPorciento / totalAccionesAnterior::FLOAT
         ELSE 0
     END AS utilidadPorAccion
+FROM (
+    SELECT
+        dp."periodoPago" AS periodo,
+        CASE EXTRACT(MONTH FROM TO_DATE(dp."periodoPago" || '01', 'YYYYMMDD'))
+            WHEN 1 THEN 'ENERO'
+            WHEN 2 THEN 'FEBRERO'
+            WHEN 3 THEN 'MARZO'
+            WHEN 4 THEN 'ABRIL'
+            WHEN 5 THEN 'MAYO'
+            WHEN 6 THEN 'JUNIO'
+            WHEN 7 THEN 'JULIO'
+            WHEN 8 THEN 'AGOSTO'
+            WHEN 9 THEN 'SEPTIEMBRE'
+            WHEN 10 THEN 'OCTUBRE'
+            WHEN 11 THEN 'NOVIEMBRE'
+            WHEN 12 THEN 'DICIEMBRE'
+        END AS mes,
+        
+        COALESCE(SUM(dp."monto"), 0) AS totalCobrado,
+        COALESCE(SUM(dp."interes"), 0) AS totalInteres,
+        COALESCE(SUM(dp."capital"), 0) AS totalCapital,
+        
+        COALESCE(SUM(dp."interes") * 0.20, 0) AS interesPorciento,
+        
+        COALESCE(SUM(dp."interes") - (SUM(dp."interes") * 0.20), 0) AS interesMenosPorciento,
+        
+        COALESCE(SUM(a."numero"), 0)::INTEGER AS totalAcciones,
+        LAG(COALESCE(SUM(a."numero"), 0)::INTEGER, 1, 0) OVER (ORDER BY dp."periodoPago" ASC) AS totalAccionesAnterior
 
-FROM "DetallePrestamo" dp
-LEFT JOIN "Accion" a ON a."periodo" = dp."periodoPago" AND a."estado" = 'A'
-WHERE dp."estadoPago" = 'PAGADO'
-  AND dp."periodoPago" IS NOT NULL
-GROUP BY dp."periodoPago"
+    FROM "DetallePrestamo" dp
+    LEFT JOIN "Accion" a ON a."periodo" = dp."periodoPago" AND a."estado" = 'A'
+    WHERE dp."estadoPago" = 'PAGADO'
+      AND dp."periodoPago" IS NOT NULL
+    GROUP BY dp."periodoPago"
+) subquery
 ORDER BY periodo DESC;
 
 -- CreateView VmNominaPayosCabecera

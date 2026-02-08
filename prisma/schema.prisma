@@ -96,6 +96,7 @@ view VmDistribucionPeriodos {
   interesporciento      Float?
   interesmenosporciento Float?
   totalacciones         Int?
+  totalaccionesanterior Int?
   utilidadporaccion     Float?
 }
 
