@@ -9,4 +9,9 @@ export class NominaController {
   async obtenerNomina(@Query('periodo') periodo?: string) {
     return this.nominaService.obtenerNominaPorPeriodo(periodo);
   }
+
+  @Get('distribucion')
+  async obtenerDistribucion(@Query('periodo') periodo?: string) {
+    return this.nominaService.obtenerDistribucionPorPeriodo(periodo);
+  }
 }

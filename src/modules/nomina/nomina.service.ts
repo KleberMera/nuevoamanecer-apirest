@@ -1,5 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { VmNominaPagosCabecera, VmNominaPagosDetalle } from 'src/generated/prisma/client';
+import {
+	VmDistribucionPeriodos,
+	VmNominaPagosCabecera,
+	VmNominaPagosDetalle,
+} from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { apiResponse } from 'src/shared/models/apiResponse';
 
@@ -27,6 +31,27 @@ export class NominaService {
 			};
 		} catch (error) {
 			throw new BadRequestException(`Error al obtener la nomina: ${error}`);
+		}
+	}
+
+	async obtenerDistribucionPorPeriodo(periodo?: string): Promise<
+		apiResponse<VmDistribucionPeriodos[]>
+	> {
+		try {
+			const distribucion = await this.prisma.vmDistribucionPeriodos.findMany({
+				where: { ...(periodo && { periodo: { startsWith: periodo } }) },
+				orderBy: { periodo: 'asc' },
+			});
+
+			return {
+				data: distribucion,
+				message: 'Distribucion obtenida exitosamente',
+				status: 200,
+			};
+		} catch (error) {
+			throw new BadRequestException(
+				`Error al obtener la distribucion: ${error}`,
+			);
 		}
 	}
 }
